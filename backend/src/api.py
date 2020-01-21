@@ -77,6 +77,7 @@ def create_drink():
         or appropriate status code indicating reason for failure
 '''
 
+
 @app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
 def patch_drinks(id):
@@ -95,7 +96,13 @@ def patch_drinks(id):
 '''
 
 
-## Error Handling
+@app.route('/drinks/<int:id>', methods=['DELETE'])
+@requires_auth('delete:drinks')
+def delete_drinks(id):
+    pass
+
+
+# Error Handling
 '''
 Example error handling for unprocessable entity
 '''
