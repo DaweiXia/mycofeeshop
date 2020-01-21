@@ -64,6 +64,7 @@ def drinks_detail():
 def create_drink():
     pass
 
+
 '''
 @TODO implement endpoint
     PATCH /drinks/<id>
@@ -75,6 +76,11 @@ def create_drink():
     returns status code 200 and json {"success": True, "drinks": drink} where drink an array containing only the updated drink
         or appropriate status code indicating reason for failure
 '''
+
+@app.route('/drinks/<int:id>', methods=['PATCH'])
+@requires_auth('patch:drinks')
+def patch_drinks(id):
+    pass
 
 
 '''
