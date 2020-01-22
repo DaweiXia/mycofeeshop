@@ -35,8 +35,7 @@ class AuthError(Exception):
 
 
 def get_token_auth_header():
-    response = urlopen("https://"+AUTH0_DOMAIN)
-    headers = response.getheaders()
+    headers = request.headers
     if not headers:
         raise AuthError('No header is present!', 401)
     elif 'Authorization' not in headers:
@@ -135,7 +134,6 @@ def requires_auth(permission=''):
     def requires_auth_decorator(f):
         @wraps(f)
         def wrapper(*args, **kwargs):
-            
             try:
                 token = get_token_auth_header()
                 payload = verify_decode_jwt(token)
