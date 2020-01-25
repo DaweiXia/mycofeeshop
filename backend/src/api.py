@@ -63,7 +63,7 @@ def drinks_detail(payload):
 @requires_auth('post:drinks')
 def create_drink(payload):
     data = request.json
-    drink = Drink(title=data['title'], recipe=str(data['recipe']))
+    drink = Drink(title=data['title'], recipe=json.dumps(data['recipe']))
     try:
         drink.insert()
     except:
