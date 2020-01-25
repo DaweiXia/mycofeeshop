@@ -4,7 +4,7 @@ from sqlalchemy import exc
 import json
 from flask_cors import CORS
 
-from .database.models import db_drop_and_create_all, setup_db, Drink
+from .database.models import db_drop_and_create_all, setup_db, Drink, db
 from .auth.auth import AuthError, requires_auth
 
 app = Flask(__name__)
@@ -61,8 +61,15 @@ def drinks_detail(payload):
 '''
 @app.route('/drinks', methods=['POST'])
 @requires_auth('post:drinks')
-def create_drink():
-    pass
+def create_drink(payload):
+    data = request.json
+    drink = Drink(title=data['title'], recipe=str(data['recipe']))
+    try:
+        drink.insert()
+    except:
+        db.session.rollback()
+        abort(422)
+    return jsonify({'success': True})
 
 
 '''
