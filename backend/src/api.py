@@ -66,10 +66,10 @@ def create_drink(payload):
     drink = Drink(title=data['title'], recipe=json.dumps(data['recipe']))
     try:
         drink.insert()
+        return jsonify({'success': True})
     except:
         db.session.rollback()
         abort(422)
-    return jsonify({'success': True})
 
 
 '''
