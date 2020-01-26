@@ -1,4 +1,4 @@
-import os
+import os, operator
 from flask import Flask, request, jsonify, abort
 from sqlalchemy import exc
 import json
@@ -87,8 +87,23 @@ def create_drink(payload):
 
 @app.route('/drinks/<int:id>', methods=['PATCH'])
 @requires_auth('patch:drinks')
-def patch_drinks(id):
-    pass
+def patch_drinks(payload, id):
+    data = request.json
+    drink = Drink.query.filter(Drink.id == id).one_or_none()
+    if drink:
+        if drink.title != data['title']:
+            drink.title = data['title']
+        patch_recipe = json.dumps(data['recipe'])
+        if not operator.eq(drink.recipe, patch_recipe):
+            drink.recipe = patch_recipe
+        try:
+            drink.update()
+            return jsonify({'success': True})
+        except:
+            db.session.rollback()
+            abort(422)
+    else:
+        abort(404)
 
 
 '''
