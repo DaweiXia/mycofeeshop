@@ -66,7 +66,9 @@ def create_drink(payload):
     drink = Drink(title=data['title'], recipe=json.dumps(data['recipe']))
     try:
         drink.insert()
-        return jsonify({'success': True})
+        return jsonify({
+                        'success': True,
+                        'drinks': [drink.short() for drink in Drink.query.all()]})
     except:
         db.session.rollback()
         abort(422)
