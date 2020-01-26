@@ -177,3 +177,19 @@ def not_found(error):
 @TODO implement error handler for AuthError
     error handler should conform to general task above 
 '''
+@app.errorhandler(401)
+def invalid_header(error):
+    return jsonify({
+                    "success": False,
+                    "error": 401,
+                    "message": "Invalid header!"
+                    }), 401
+
+
+@app.errorhandler(405)
+def permission_error(error):
+    return jsonify({
+                    "success": False,
+                    "error": 405,
+                    "message": "Permission not found!"
+                    }), 405
