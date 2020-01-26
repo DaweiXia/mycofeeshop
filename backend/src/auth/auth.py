@@ -66,9 +66,9 @@ def get_token_auth_header():
 
 def check_permissions(permission, payload):
     if 'permissions' not in payload:
-        raise AuthError('Permissions not in JWT!', 400)
+        raise AuthError('Permissions not in JWT!', 405)
     if permission not in payload['permissions']:
-        raise AuthError('Permission not found!', 403)
+        raise AuthError('Permission not found!', 405)
     return True
 
 
@@ -113,9 +113,9 @@ def verify_decode_jwt(token):
         except jwt.ExpiredSignatureError:
             raise AuthError('Token expired!', 401)
         except Exception:
-            raise AuthError('Invalid header! Unable to parse auth token.', 400)
+            raise AuthError('Invalid header! Unable to parse auth token.', 401)
 
-    raise AuthError('Invalid header! Unable to find appropriate key.', 400)
+    raise AuthError('Invalid header! Unable to find appropriate key.', 401)
 
 
 '''
@@ -139,7 +139,10 @@ def requires_auth(permission=''):
                 payload = verify_decode_jwt(token)
             except Exception:
                 abort(401)
-            check_permissions(permission, payload)
+            try:
+                check_permissions(permission, payload)
+            except Exception:
+                abort(405)
             return f(payload, *args, **kwargs)
 
         return wrapper
